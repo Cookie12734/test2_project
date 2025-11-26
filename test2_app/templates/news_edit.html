@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Edit{% endblock title %}
+
+    {% block contents %}
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col offset-2">
+                <form method ="POST"
+                    enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <th>カテゴリ</th>
+                            <td>{{ form.category }}</td>
+                        </tr>
+                        <tr>
+                            <th>タイトル</th>
+                            <td>{{ form.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>記事</th>
+                            <td>{{ form.post }}</td>
+                        </tr>
+                        <tr>
+                            <th>画像１</th>
+                            <td>{{ form.image1 }}</td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <button class="btn btn-primary my-2"
+                        type="submit">編集する</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock contents %}

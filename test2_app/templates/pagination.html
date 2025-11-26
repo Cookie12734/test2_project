@@ -1,0 +1,37 @@
+<ul class="pagination"
+    style="justify-content:center">
+    <!--直前にページがある場合かどうかの判断-->
+    {% if page_obj.has_previous %}
+    <!--前のページがあるのであれば、「<<」を表示し、直前の番号を返す。-->
+    <li class="page-item">
+        <a class="page-link btn btn-warning text-dark"
+            href="?page={{ page_obj.previous_page_number }}"
+            aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+    {% endif %}
+    <!--すべてのページについてページ番号を表示-->
+    {% for num in page_obj.paginator.page_range %}
+    <!--処理中のページ番号が一致する場合は、表示しないための処理-->
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span class="page-link btn btn-warning text-dark">{{ num }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link btn btn-warning text-dark" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+    <!--次のページが存在する場合「>>」の表示を行う処理-->
+    {% if page_obj.has_next %}
+    <li class="page-item">
+        <a class="page-link btn btn-warning text-dark"
+        href="?page={{ page_obj.next_page_number }}"
+        aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+    {% endif %}
+</ul>

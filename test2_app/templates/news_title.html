@@ -1,0 +1,23 @@
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">O-hara News</h1>
+        <p class="lead text-body-secondary">
+          最近の出来事を投稿しましょう。
+          
+        </p>
+        <p>
+          {% if user.is_authenticated %}
+          <a href="{% url "test2_app:post" %}"
+            class="btn btn-info my-2">投稿する</a>
+          <a href="{% url 'accounts:logout' %}"
+            class="btn btn-secondary my-2">ログアウト</a>
+          {% else %}
+          <a href="{% url "accounts:signup" %}" class="btn btn-primary my-2">今すぐサインアップ</a>
+          <a href="{% url "accounts:login" %}" class="btn btn-secondary my-2">登録済みの方はログイン</a>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </section>
+

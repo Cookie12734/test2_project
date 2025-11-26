@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}O-hara News{% endblock title %}
+{% block contents %}
+        {% include "news_title.html" %}
+        {% include "news_list.html" %}
+        {% include "pagination.html" %}
+{% endblock contents %}

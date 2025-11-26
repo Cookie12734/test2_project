@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Post{% endblock title %}
+
+{% block contents %}
+<br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">新規投稿</h3>
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">カテゴリ</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="text-danger small">{{ form.category.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">タイトル</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">記事</label>
+                            {{ form.post }}
+                            {% if form.post.errors %}
+                                <div class="text-danger small">{{ form.post.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">タイトル画像</label>
+                            {{ form.image1 }}
+                            {% if form.image1.errors %}
+                                <div class="text-danger small">{{ form.image1.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">投稿する</button>
+                            <a href="{% url 'test2_app:index' %}" class="btn btn-outline-secondary">キャンセル</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        var form = document.querySelector('form');
+        if(!form) return;
+        // Add Bootstrap classes to form fields rendered by Django widgets
+        var selectors = 'input:not([type=checkbox]):not([type=radio]):not([type=submit]), textarea, select';
+        var inputs = form.querySelectorAll(selectors);
+        inputs.forEach(function(el){
+            // file inputs should keep default appearance but get spacing
+            if(el.type === 'file') {
+                el.classList.add('form-control');
+            } else {
+                el.classList.add('form-control');
+            }
+        });
+    })();
+</script>
+
+{% endblock contents %}

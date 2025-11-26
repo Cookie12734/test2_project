@@ -1,0 +1,57 @@
+{% load static %}
+  <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+      <div class="row row-cols-1 g-3">
+        {% for record in object_list %}
+        <div class="col">
+          <div class="card mb-3 shadow-sm h-100">
+            <div class="row g-0 align-items-stretch">
+              <div class="col-md-4">
+                {% if record.image1 %}
+                  <img src="{{ record.image1.url }}" 
+                      class="img-fluid rounded-start card-img-left"
+                      alt="{{ record.title }}">
+                {% else %}
+                  <img src="{% static 'img/noimage.png' %}" alt="no image"
+                      class="img-fluid rounded-start card-img-left">
+                {% endif %}
+              </div>
+              <div class="col-md-8">
+                <div class="card-body d-flex flex-column h-100">
+                  <h3 class="card-text">
+                    {{record.title}}
+                  </h3>
+                  <br>
+                  <p>
+                    {{ record.post|truncatechars:400 }}
+                  </p>
+                  <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-info"
+                      onclick="location.href='{% url 'test2_app:news_detail' record.pk %}'">詳細</button>
+                      <button type="button" class="btn btn-outline-secondary"
+                      onclick="location.href='{% url 'test2_app:news_cat' category=record.category.id %}'">カテゴリ:{{record.category.title}}</button>
+                    </div>
+                    <div class="text-end">
+                      <a href="{% url 'test2_app:user_list' user=record.user.id %}">
+                        <small class="text-muted">{{record.user.username}}</small>
+                      </a>
+                      <br>
+                      <small class="text-muted">
+                        {{ record.posted_at|timesince }}前
+                        {% if record.updated_at and record.updated_at > record.posted_at %}
+                          <br>編集済み: {{ record.updated_at|timesince }}前
+                        {% endif %}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>

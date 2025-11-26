@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}News Detail{% endblock title %}
+
+    {% block contents %}
+    <div class="left">
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col offset-4">
+                    <h2>{{object.title}}</h2>
+                    <p>{{object.post}}</p>
+                    <br>
+                    <p>{{object.posted_at}}に投稿</p>
+
+                    {% if object.image1 %}
+                        <img src="{{ object.image1.url }}" alt="image" style="max-width:300px; height:auto;">
+                    {% else %}
+                        <img src="{% static 'img/noimage.png' %}" alt="no image" style="max-width:300px; height:auto;">
+                    {% endif %}
+                    <hr>
+                    
+                    <!-- コメント入力欄 -->
+                    <h4>コメント</h4>
+                    {% if request.user.is_authenticated %}
+                    <form method="POST" action="{% url 'test2_app:post_comment' object.pk %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea name="text" class="form-control" placeholder="コメントを入力しよう！" rows="3" style="resize: none; width: 100%; height: 100px;"></textarea>
+                            <style>
+                                textarea::placeholder {
+                                    color: #999;
+                                    opacity: 1;
+                                }
+                                textarea {
+                                    color: #000;
+                                }
+                            </style>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">コメント送信</button>
+                    </form>
+                    {% else %}
+                    <p><a href="{% url 'accounts:login' %}">ログイン</a>してコメントしてください。</p>
+                    {% endif %}
+                    
+                    <!-- コメント一覧 -->
+                    {% if object.comments.all %}
+                    <div class="mt-4">
+                        <h5>コメント一覧（{{ object.comments.count }}件）</h5>
+                        {% for comment in object.comments.all %}
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <p class="card-text">{{ comment.text }}</p>
+                                <small class="text-muted">{{ comment.user.username }} - {{ comment.created_at|date:"Y年m月d日 H:i" }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    {% if request.user == object.user %}
+                    <form method="POST">
+                        <a href="{% url 'test2_app:news_edit' object.pk %}" 
+                            class="btn btn-warning my-2">編集する</a>
+                        <a href="{% url 'test2_app:news_delete' object.pk %}"
+                            class="btn btn-secondary my-2">削除する</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock contents %}
