@@ -23,10 +23,10 @@
                     <!-- コメント入力欄 -->
                     <h4>コメント</h4>
                     {% if request.user.is_authenticated %}
-                    <form method="POST" action="{% url 'test2_app:post_comment' object.pk %}">
+                    <form id="comment-form" method="post" action="">
                         {% csrf_token %}
                         <div class="form-group">
-                            <textarea name="text" class="form-control" placeholder="コメントを入力しよう！" rows="3" style="resize: none; width: 100%; height: 100px;"></textarea>
+                            <textarea name="text" class="form-control" placeholder="コメントを入力しよう！" rows="3" style="resize: none; width: 100%; height: 100px;">{{ comment_form.text.value|default_if_none:'' }}</textarea>
                             <style>
                                 textarea::placeholder {
                                     color: #999;
@@ -36,10 +36,32 @@
                                     color: #000;
                                 }
                             </style>
+                            {% if comment_form.text.errors %}
+                                {% for error in comment_form.text.errors %}
+                                <small class="text-danger d-block">{{ error }}</small>
+                                {% endfor %}
+                            {% endif %}
+                            <small id="comment-error" class="text-danger d-none">コメントを入力してください。</small>
                         </div>
                         <br>
                         <button type="submit" class="btn btn-primary">コメント送信</button>
                     </form>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const form = document.getElementById('comment-form');
+                            if (!form) return;
+                            const textarea = form.querySelector('textarea[name="text"]');
+                            const error = document.getElementById('comment-error');
+                            form.addEventListener('submit', function (event) {
+                                if (!textarea.value.trim()) {
+                                    event.preventDefault();
+                                    error.classList.remove('d-none');
+                                } else {
+                                    error.classList.add('d-none');
+                                }
+                            });
+                        });
+                    </script>
                     {% else %}
                     <p><a href="{% url 'accounts:login' %}">ログイン</a>してコメントしてください。</p>
                     {% endif %}

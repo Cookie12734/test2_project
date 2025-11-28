@@ -1,4 +1,4 @@
-{% load static %}
+{% load static posted_time %}
   <div class="album py-5 bg-body-tertiary">
     <div class="container">
 
@@ -39,9 +39,9 @@
                       </a>
                       <br>
                       <small class="text-muted">
-                        {{ record.posted_at|timesince }}前
+                        {{ record.posted_at|posted_time }}
                         {% if record.updated_at and record.updated_at > record.posted_at %}
-                          <br>編集済み: {{ record.updated_at|timesince }}前
+                          <br>編集済み: {{ record.updated_at|posted_time }}
                         {% endif %}
                       </small>
                     </div>

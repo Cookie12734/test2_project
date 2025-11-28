@@ -15,5 +15,4 @@ urlpatterns = [
     path('mypage/', views.MypageView.as_view(), name = 'mypage'),
     path('test2_app/<int:pk>/delete/', views.NewsDeleteView.as_view(), name = 'news_delete'),
     path('test2_app/<int:pk>/edit/', views.NewsEditView.as_view(), name = 'news_edit'),
-    path('test2_app/<int:pk>/comment/', views.CommentCreateView.as_view(), name = 'post_comment'),
 ]

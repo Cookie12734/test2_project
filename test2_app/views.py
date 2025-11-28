@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView,ListView
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -72,11 +72,30 @@ class UserView(ListView):
         return user_list
 
 class DetailView(DetailView):
-    
+
     template_name = 'detail.html'
-    
+
     model = Test2News
-    
+
+    form_class = CommentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = kwargs.get('comment_form', self.form_class())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if not request.user.is_authenticated:
+            return redirect('accounts:login')
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.user = request.user
+            comment.save()
+            return redirect('test2_app:news_detail', pk=self.object.pk)
+        return self.render_to_response(self.get_context_data(comment_form=form))
 
 class MypageView(ListView):
     
@@ -123,27 +142,3 @@ class NewsEditView(UpdateView):
     def get_success_url(self):
         return reverse_lazy("test2_app:index")
 
-class CommentCreateView(CreateView):
-    
-    model = Comment
-    
-    form_class = CommentForm
-    
-    template_name = 'post_comment.html'
-    
-    def form_valid(self, form):
-        # 本来すぐにDBへ保存してしまうが、取得して保存したいため、一旦falseに変更する
-        postdata = form.save(commit=False)
-        # URLから記事ID（pk）を取得してコメントに紐付ける
-        post_id = self.kwargs['pk']
-        postdata.post_id = post_id
-        #送られてきた値のユーザーIDを取得
-        postdata.user = self.request.user
-        # DBへ保存
-        postdata.save()
-        
-        return super().form_valid(form)
-    
-    def get_success_url(self):
-        # コメント作成後、記事の詳細ページにリダイレクト
-        return reverse_lazy("test2_app:news_detail", kwargs={'pk': self.kwargs['pk']})
